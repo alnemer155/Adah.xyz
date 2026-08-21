@@ -1,0 +1,21 @@
+# Cloudflare Pages redirects for Adah.xyz subdomains
+
+# Main domain (adaa.binjaafar.xyz)
+https://adaa.binjaafar.xyz/ https://adaa.binjaafar.xyz/adaa.html 200
+https://adaa.binjaafar.xyz/index.html https://adaa.binjaafar.xyz/adaa.html 200
+
+# t1 subdomain (t1.adaa.binjaafar.xyz) → tekrar.html
+https://t1.adaa.binjaafar.xyz/ https://t1.adaa.binjaafar.xyz/tekrar.html 200
+https://t1.adaa.binjaafar.xyz/index.html https://t1.adaa.binjaafar.xyz/tekrar.html 200
+
+# t2 subdomain (t2.adaa.binjaafar.xyz) → qaran.html
+https://t2.adaa.binjaafar.xyz/ https://t2.adaa.binjaafar.xyz/qaran.html 200
+https://t2.adaa.binjaafar.xyz/index.html https://t2.adaa.binjaafar.xyz/qaran.html 200
+
+# t3 subdomain (t3.adaa.binjaafar.xyz) → hashai.html
+https://t3.adaa.binjaafar.xyz/ https://t3.adaa.binjaafar.xyz/hashai.html 200
+https://t3.adaa.binjaafar.xyz/index.html https://t3.adaa.binjaafar.xyz/hashai.html 200
+
+# t4 subdomain (t4.adaa.binjaafar.xyz) → tareekh.html
+https://t4.adaa.binjaafar.xyz/ https://t4.adaa.binjaafar.xyz/tareekh.html 200
+https://t4.adaa.binjaafar.xyz/index.html https://t4.adaa.binjaafar.xyz/tareekh.html 200
