@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>حوّل</title>
+<meta name="description" content="أداة بسيطة لتحويل الوحدات: الطول، الوزن، الحرارة، والعملة بسعر صرف تدخله يدويًا.">
+<link rel="canonical" href="https://t10.adah.binjaafar.xyz">
+<meta property="og:type" content="website">
+<meta property="og:title" content="حوّل">
+<meta property="og:description" content="أداة بسيطة لتحويل الوحدات: الطول، الوزن، الحرارة، والعملة بسعر صرف تدخله يدويًا.">
+<meta property="og:url" content="https://t10.adah.binjaafar.xyz">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="حوّل">
+<meta name="twitter:description" content="أداة بسيطة لتحويل الوحدات: الطول، الوزن، الحرارة، والعملة بسعر صرف تدخله يدويًا.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@200;300;500&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --paper:#FFFFFF;
+  --ink:#0B0C0E;
+  --blue:#1E4FFF;
+  --grey:#9AA0A8;
+  --grey-line:#D8DADD;
+  --grey-tint:#F4F4F5;
+}
+
+*{box-sizing:border-box; margin:0; padding:0;}
+
+html,body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:'IBM Plex Sans Arabic', sans-serif;
+  font-weight:200;
+  min-height:100%;
+}
+
+.topbar{
+  padding:32px clamp(20px,5vw,56px) 24px;
+  display:flex;
+  justify-content:center;
+  background:transparent;
+}
+
+.logo{
+  font-weight:500;
+  font-size:clamp(24px, 3.4vw, 34px);
+  letter-spacing:0.02em;
+}
+
+main{
+  max-width:720px;
+  margin:0 auto;
+  padding:clamp(8px,5vw,24px) clamp(20px,5vw,56px) 80px;
+}
+
+.intro{
+  margin-bottom:clamp(36px,5vw,56px);
+  max-width:560px;
+  margin-left:auto;
+  margin-right:auto;
+  text-align:center;
+}
+
+.intro h1{
+  font-weight:500;
+  font-size:clamp(30px,4.6vw,44px);
+  line-height:1.2;
+  margin-bottom:14px;
+}
+
+.intro p{
+  font-weight:300;
+  font-size:15px;
+  color:var(--grey);
+  line-height:1.7;
+}
+
+.cat-toggle{
+  display:grid;
+  grid-template-columns:repeat(4, 1fr);
+  border:1px solid var(--grey-line);
+  margin-bottom:28px;
+}
+
+.cat-toggle button{
+  text-align:center;
+  padding:12px 8px;
+  font-size:13px;
+  font-weight:300;
+  cursor:pointer;
+  color:var(--ink);
+  background:var(--paper);
+  border:none;
+  border-left:1px solid var(--grey-line);
+  border-radius:0;
+  font-family:'IBM Plex Sans Arabic', sans-serif;
+  transition:background .12s ease, color .12s ease;
+}
+
+.cat-toggle button:last-child{border-left:none;}
+
+.cat-toggle button.active{
+  background:var(--blue);
+  color:var(--paper);
+  font-weight:500;
+}
+
+.section{
+  border:1px solid var(--grey-line);
+  padding:clamp(20px,4vw,36px);
+}
+
+.panel{display:none;}
+.panel.active{display:block;}
+
+.field-label{
+  font-size:12px;
+  color:var(--grey);
+  font-weight:300;
+  margin-bottom:8px;
+}
+
+.conv-row{
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  gap:14px;
+  align-items:end;
+  margin-bottom:16px;
+}
+
+.conv-col{
+  display:flex;
+  flex-direction:column;
+}
+
+.swap-btn{
+  width:36px;
+  height:36px;
+  border:1px solid var(--grey-line);
+  background:var(--paper);
+  color:var(--ink);
+  cursor:pointer;
+  font-size:16px;
+  border-radius:0;
+  transition:background .12s ease, color .12s ease;
+  align-self:center;
+  margin-bottom:1px;
+}
+
+.swap-btn:hover{
+  background:var(--ink);
+  color:var(--paper);
+}
+
+input[type="number"], input[type="text"], select{
+  width:100%;
+  border:1px solid var(--grey-line);
+  border-radius:0;
+  padding:12px 14px;
+  font-family:'IBM Plex Sans Arabic', sans-serif;
+  font-weight:300;
+  font-size:15px;
+  color:var(--ink);
+  background:var(--paper);
+  outline:none;
+  margin-bottom:10px;
+  appearance:none;
+}
+
+select{
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230B0C0E' stroke-width='2'><path d='M6 9l6 6 6-6'/></svg>");
+  background-repeat:no-repeat;
+  background-position:left 10px center;
+  background-size:14px;
+  padding-left:28px;
+}
+
+input:focus, select:focus{border-color:var(--blue);}
+
+.result-box{
+  border:1px solid var(--grey-line);
+  background:var(--grey-tint);
+  padding:12px 14px;
+  font-size:15px;
+  font-weight:500;
+  color:var(--ink);
+  min-height:47px;
+  display:flex;
+  align-items:center;
+}
+
+.rate-field{
+  margin-top:6px;
+  margin-bottom:16px;
+}
+
+.note{
+  font-size:12px;
+  color:var(--grey);
+  line-height:1.7;
+  margin-top:10px;
+}
+
+footer{
+  text-align:center;
+  padding:20px;
+  font-size:12px;
+  color:var(--grey);
+  border-top:1px solid var(--grey-line);
+  margin-top:28px;
+}
+
+footer a{
+  color:var(--grey);
+  text-decoration:none;
+  border-bottom:1px solid var(--grey-line);
+  transition:color .12s ease, border-color .12s ease;
+}
+
+footer a:hover{
+  color:var(--blue);
+  border-color:var(--blue);
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">حوّل</div>
+</div>
+
+<main>
+  <div class="intro">
+    <h1>حوّل بين الوحدات فورًا</h1>
+    <p>اختر النوع، اكتب القيمة، والنتيجة تتحدث وأنت تكتب.</p>
+  </div>
+
+  <div class="cat-toggle" id="catToggle">
+    <button data-cat="length" class="active">طول</button>
+    <button data-cat="weight">وزن</button>
+    <button data-cat="temp">حرارة</button>
+    <button data-cat="currency">عملة</button>
+  </div>
+
+  <div class="section">
+
+    <!-- LENGTH -->
+    <div class="panel active" id="panel-length">
+      <div class="conv-row">
+        <div class="conv-col">
+          <div class="field-label">من</div>
+          <select id="lengthFromUnit"></select>
+          <input type="number" id="lengthValue" placeholder="0">
+        </div>
+        <button class="swap-btn" data-swap="length">⇄</button>
+        <div class="conv-col">
+          <div class="field-label">إلى</div>
+          <select id="lengthToUnit"></select>
+          <div class="result-box" id="lengthResult">0</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WEIGHT -->
+    <div class="panel" id="panel-weight">
+      <div class="conv-row">
+        <div class="conv-col">
+          <div class="field-label">من</div>
+          <select id="weightFromUnit"></select>
+          <input type="number" id="weightValue" placeholder="0">
+        </div>
+        <button class="swap-btn" data-swap="weight">⇄</button>
+        <div class="conv-col">
+          <div class="field-label">إلى</div>
+          <select id="weightToUnit"></select>
+          <div class="result-box" id="weightResult">0</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TEMPERATURE -->
+    <div class="panel" id="panel-temp">
+      <div class="conv-row">
+        <div class="conv-col">
+          <div class="field-label">من</div>
+          <select id="tempFromUnit"></select>
+          <input type="number" id="tempValue" placeholder="0">
+        </div>
+        <button class="swap-btn" data-swap="temp">⇄</button>
+        <div class="conv-col">
+          <div class="field-label">إلى</div>
+          <select id="tempToUnit"></select>
+          <div class="result-box" id="tempResult">0</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CURRENCY -->
+    <div class="panel" id="panel-currency">
+      <div class="conv-row">
+        <div class="conv-col">
+          <div class="field-label">من (رمز العملة)</div>
+          <input type="text" id="currencyFromCode" placeholder="مثال: SAR" value="SAR">
+          <input type="number" id="currencyValue" placeholder="0">
+        </div>
+        <button class="swap-btn" data-swap="currency">⇄</button>
+        <div class="conv-col">
+          <div class="field-label">إلى (رمز العملة)</div>
+          <input type="text" id="currencyToCode" placeholder="مثال: USD" value="USD">
+          <div class="result-box" id="currencyResult">0</div>
+        </div>
+      </div>
+
+      <div class="rate-field">
+        <div class="field-label" id="rateLabel">سعر الصرف — كم يساوي 1 SAR بـ USD</div>
+        <input type="number" id="currencyRate" placeholder="0.2667" step="0.0001">
+      </div>
+
+      <div class="note">أدخل السعر يدويًا لأن أسعار الصرف تتغير باستمرار — تقدر تجيبه من أي مصدر تثق فيه وقت التحويل.</div>
+    </div>
+
+  </div>
+</main>
+
+<footer>حوّل — <a href="https://t10.adah.binjaafar.xyz">t10.adah.binjaafar.xyz</a></footer>
+
+<script>
+const LENGTH_UNITS = {
+  'مم': 0.001, 'سم': 0.01, 'م': 1, 'كم': 1000,
+  'بوصة': 0.0254, 'قدم': 0.3048, 'ياردة': 0.9144, 'ميل': 1609.344
+};
+
+const WEIGHT_UNITS = {
+  'ملغم': 0.000001, 'غم': 0.001, 'كغم': 1, 'طن': 1000,
+  'أونصة': 0.0283495, 'رطل': 0.453592
+};
+
+const TEMP_UNITS = ['سيليزيوس', 'فهرنهايت', 'كلفن'];
+
+function populateSelect(sel, units, defaultIndex){
+  sel.innerHTML = '';
+  units.forEach((u, i) => {
+    const opt = document.createElement('option');
+    opt.value = u;
+    opt.textContent = u;
+    if(i === defaultIndex) opt.selected = true;
+    sel.appendChild(opt);
+  });
+}
+
+function formatNum(n){
+  if(!isFinite(n)) return '0';
+  return n.toLocaleString('ar', {maximumFractionDigits: 6});
+}
+
+// ---- LENGTH ----
+const lengthFromUnit = document.getElementById('lengthFromUnit');
+const lengthToUnit = document.getElementById('lengthToUnit');
+const lengthValue = document.getElementById('lengthValue');
+const lengthResult = document.getElementById('lengthResult');
+populateSelect(lengthFromUnit, Object.keys(LENGTH_UNITS), 2);
+populateSelect(lengthToUnit, Object.keys(LENGTH_UNITS), 0);
+
+function updateLength(){
+  const v = parseFloat(lengthValue.value) || 0;
+  const base = v * LENGTH_UNITS[lengthFromUnit.value];
+  const result = base / LENGTH_UNITS[lengthToUnit.value];
+  lengthResult.textContent = formatNum(result);
+}
+[lengthFromUnit, lengthToUnit, lengthValue].forEach(el => el.addEventListener('input', updateLength));
+
+// ---- WEIGHT ----
+const weightFromUnit = document.getElementById('weightFromUnit');
+const weightToUnit = document.getElementById('weightToUnit');
+const weightValue = document.getElementById('weightValue');
+const weightResult = document.getElementById('weightResult');
+populateSelect(weightFromUnit, Object.keys(WEIGHT_UNITS), 2);
+populateSelect(weightToUnit, Object.keys(WEIGHT_UNITS), 4);
+
+function updateWeight(){
+  const v = parseFloat(weightValue.value) || 0;
+  const base = v * WEIGHT_UNITS[weightFromUnit.value];
+  const result = base / WEIGHT_UNITS[weightToUnit.value];
+  weightResult.textContent = formatNum(result);
+}
+[weightFromUnit, weightToUnit, weightValue].forEach(el => el.addEventListener('input', updateWeight));
+
+// ---- TEMPERATURE ----
+const tempFromUnit = document.getElementById('tempFromUnit');
+const tempToUnit = document.getElementById('tempToUnit');
+const tempValue = document.getElementById('tempValue');
+const tempResult = document.getElementById('tempResult');
+populateSelect(tempFromUnit, TEMP_UNITS, 0);
+populateSelect(tempToUnit, TEMP_UNITS, 1);
+
+function toCelsius(v, unit){
+  if(unit === 'سيليزيوس') return v;
+  if(unit === 'فهرنهايت') return (v - 32) * 5 / 9;
+  if(unit === 'كلفن') return v - 273.15;
+}
+
+function fromCelsius(c, unit){
+  if(unit === 'سيليزيوس') return c;
+  if(unit === 'فهرنهايت') return c * 9 / 5 + 32;
+  if(unit === 'كلفن') return c + 273.15;
+}
+
+function updateTemp(){
+  const v = parseFloat(tempValue.value) || 0;
+  const c = toCelsius(v, tempFromUnit.value);
+  const result = fromCelsius(c, tempToUnit.value);
+  tempResult.textContent = formatNum(result);
+}
+[tempFromUnit, tempToUnit, tempValue].forEach(el => el.addEventListener('input', updateTemp));
+
+// ---- CURRENCY ----
+const currencyFromCode = document.getElementById('currencyFromCode');
+const currencyToCode = document.getElementById('currencyToCode');
+const currencyValue = document.getElementById('currencyValue');
+const currencyRate = document.getElementById('currencyRate');
+const currencyResult = document.getElementById('currencyResult');
+const rateLabel = document.getElementById('rateLabel');
+
+function updateCurrency(){
+  const v = parseFloat(currencyValue.value) || 0;
+  const rate = parseFloat(currencyRate.value) || 0;
+  const result = v * rate;
+  currencyResult.textContent = formatNum(result);
+  const from = currencyFromCode.value.trim() || 'من';
+  const to = currencyToCode.value.trim() || 'إلى';
+  rateLabel.textContent = `سعر الصرف — كم يساوي 1 ${from} بـ ${to}`;
+}
+[currencyFromCode, currencyToCode, currencyValue, currencyRate].forEach(el => el.addEventListener('input', updateCurrency));
+
+// ---- SWAP ----
+document.querySelectorAll('.swap-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const type = btn.dataset.swap;
+    if(type === 'length'){
+      const tmp = lengthFromUnit.value;
+      lengthFromUnit.value = lengthToUnit.value;
+      lengthToUnit.value = tmp;
+      updateLength();
+    }else if(type === 'weight'){
+      const tmp = weightFromUnit.value;
+      weightFromUnit.value = weightToUnit.value;
+      weightToUnit.value = tmp;
+      updateWeight();
+    }else if(type === 'temp'){
+      const tmp = tempFromUnit.value;
+      tempFromUnit.value = tempToUnit.value;
+      tempToUnit.value = tmp;
+      updateTemp();
+    }else if(type === 'currency'){
+      const tmp = currencyFromCode.value;
+      currencyFromCode.value = currencyToCode.value;
+      currencyToCode.value = tmp;
+      if(parseFloat(currencyRate.value)){
+        currencyRate.value = (1 / parseFloat(currencyRate.value)).toFixed(6);
+      }
+      updateCurrency();
+    }
+  });
+});
+
+// ---- CATEGORY TOGGLE ----
+document.getElementById('catToggle').querySelectorAll('button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('#catToggle button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('panel-' + btn.dataset.cat).classList.add('active');
+  });
+});
+
+// initial calc
+updateLength();
+updateWeight();
+updateTemp();
+updateCurrency();
+</script>
+
+</body>
+</html>

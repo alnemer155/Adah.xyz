@@ -1,0 +1,49 @@
+# Cloudflare Pages redirects for Adah.xyz subdomains
+
+# Main domain (adah.binjaafar.xyz)
+https://adah.binjaafar.xyz/ https://adah.binjaafar.xyz/adaa.html 200
+https://adah.binjaafar.xyz/index.html https://adah.binjaafar.xyz/adaa.html 200
+
+# t1 subdomain (t1.adah.binjaafar.xyz) → tekrar.html
+https://t1.adah.binjaafar.xyz/ https://t1.adah.binjaafar.xyz/tekrar.html 200
+https://t1.adah.binjaafar.xyz/index.html https://t1.adah.binjaafar.xyz/tekrar.html 200
+
+# t2 subdomain (t2.adah.binjaafar.xyz) → qaran.html
+https://t2.adah.binjaafar.xyz/ https://t2.adah.binjaafar.xyz/qaran.html 200
+https://t2.adah.binjaafar.xyz/index.html https://t2.adah.binjaafar.xyz/qaran.html 200
+
+# t3 subdomain (t3.adah.binjaafar.xyz) → hashai.html
+https://t3.adah.binjaafar.xyz/ https://t3.adah.binjaafar.xyz/hashai.html 200
+https://t3.adah.binjaafar.xyz/index.html https://t3.adah.binjaafar.xyz/hashai.html 200
+
+# t4 subdomain (t4.adah.binjaafar.xyz) → tareekh.html
+https://t4.adah.binjaafar.xyz/ https://t4.adah.binjaafar.xyz/tareekh.html 200
+https://t4.adah.binjaafar.xyz/index.html https://t4.adah.binjaafar.xyz/tareekh.html 200
+
+# t5 subdomain (t5.adah.binjaafar.xyz) → addad.html
+https://t5.adah.binjaafar.xyz/ https://t5.adah.binjaafar.xyz/addad.html 200
+https://t5.adah.binjaafar.xyz/index.html https://t5.adah.binjaafar.xyz/addad.html 200
+
+# t6 subdomain (t6.adah.binjaafar.xyz) → mzeel.html
+https://t6.adah.binjaafar.xyz/ https://t6.adah.binjaafar.xyz/mzeel.html 200
+https://t6.adah.binjaafar.xyz/index.html https://t6.adah.binjaafar.xyz/mzeel.html 200
+
+# t7 subdomain (t7.adah.binjaafar.xyz) → qassem.html
+https://t7.adah.binjaafar.xyz/ https://t7.adah.binjaafar.xyz/qassem.html 200
+https://t7.adah.binjaafar.xyz/index.html https://t7.adah.binjaafar.xyz/qassem.html 200
+
+# t8 subdomain (t8.adah.binjaafar.xyz) → qr.html
+https://t8.adah.binjaafar.xyz/ https://t8.adah.binjaafar.xyz/qr.html 200
+https://t8.adah.binjaafar.xyz/index.html https://t8.adah.binjaafar.xyz/qr.html 200
+
+# t9 subdomain (t9.adah.binjaafar.xyz) → raatib.html
+https://t9.adah.binjaafar.xyz/ https://t9.adah.binjaafar.xyz/raatib.html 200
+https://t9.adah.binjaafar.xyz/index.html https://t9.adah.binjaafar.xyz/raatib.html 200
+
+# t10 subdomain (t10.adah.binjaafar.xyz) → hawwil.html
+https://t10.adah.binjaafar.xyz/ https://t10.adah.binjaafar.xyz/hawwil.html 200
+https://t10.adah.binjaafar.xyz/index.html https://t10.adah.binjaafar.xyz/hawwil.html 200
+
+# t11 subdomain (t11.adah.binjaafar.xyz) → addad2.html
+https://t11.adah.binjaafar.xyz/ https://t11.adah.binjaafar.xyz/addad2.html 200
+https://t11.adah.binjaafar.xyz/index.html https://t11.adah.binjaafar.xyz/addad2.html 200

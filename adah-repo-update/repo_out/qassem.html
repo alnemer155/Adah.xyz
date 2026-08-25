@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>قسّم</title>
+<meta name="description" content="أداة بسيطة لتقسيم فاتورة أو مبلغ بين عدة أشخاص بالتساوي أو بنسب مخصصة.">
+<link rel="canonical" href="https://t7.adah.binjaafar.xyz">
+<meta property="og:type" content="website">
+<meta property="og:title" content="قسّم">
+<meta property="og:description" content="أداة بسيطة لتقسيم فاتورة أو مبلغ بين عدة أشخاص بالتساوي أو بنسب مخصصة.">
+<meta property="og:url" content="https://t7.adah.binjaafar.xyz">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="قسّم">
+<meta name="twitter:description" content="أداة بسيطة لتقسيم فاتورة أو مبلغ بين عدة أشخاص بالتساوي أو بنسب مخصصة.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@200;300;500&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --paper:#FFFFFF;
+  --ink:#0B0C0E;
+  --blue:#1E4FFF;
+  --grey:#9AA0A8;
+  --grey-line:#D8DADD;
+  --grey-tint:#F4F4F5;
+}
+
+*{box-sizing:border-box; margin:0; padding:0;}
+
+html,body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:'IBM Plex Sans Arabic', sans-serif;
+  font-weight:200;
+  min-height:100%;
+}
+
+.topbar{
+  padding:32px clamp(20px,5vw,56px) 24px;
+  display:flex;
+  justify-content:center;
+  background:transparent;
+}
+
+.logo{
+  font-weight:500;
+  font-size:clamp(24px, 3.4vw, 34px);
+  letter-spacing:0.02em;
+}
+
+main{
+  max-width:1040px;
+  margin:0 auto;
+  padding:clamp(8px,5vw,24px) clamp(20px,5vw,56px) 80px;
+}
+
+.intro{
+  margin-bottom:clamp(36px,5vw,56px);
+  max-width:620px;
+  margin-left:auto;
+  margin-right:auto;
+  text-align:center;
+}
+
+.intro h1{
+  font-weight:500;
+  font-size:clamp(30px,4.6vw,44px);
+  line-height:1.2;
+  margin-bottom:14px;
+}
+
+.intro p{
+  font-weight:300;
+  font-size:15px;
+  color:var(--grey);
+  line-height:1.7;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:0;
+  border:1px solid var(--grey-line);
+}
+
+@media (max-width:760px){
+  .grid{grid-template-columns:1fr;}
+  .box + .box{border-top:1px solid var(--grey-line);}
+}
+
+.box{
+  padding:clamp(20px,3vw,32px);
+  display:flex;
+  flex-direction:column;
+}
+
+.box + .box{
+  border-right:1px solid var(--grey-line);
+}
+
+@media (max-width:760px){
+  .box + .box{border-right:none;}
+}
+
+.box-label{
+  display:flex;
+  align-items:baseline;
+  gap:10px;
+  margin-bottom:18px;
+}
+
+.box-num{
+  font-weight:500;
+  font-size:13px;
+  color:var(--blue);
+}
+
+.box-title{
+  font-weight:500;
+  font-size:14px;
+  letter-spacing:0.01em;
+}
+
+.field-label{
+  font-size:12px;
+  color:var(--grey);
+  font-weight:300;
+  margin-bottom:8px;
+}
+
+input[type="number"], input[type="text"]{
+  width:100%;
+  border:1px solid var(--grey-line);
+  border-radius:0;
+  padding:12px 14px;
+  font-family:'IBM Plex Sans Arabic', sans-serif;
+  font-weight:300;
+  font-size:15px;
+  color:var(--ink);
+  background:var(--paper);
+  outline:none;
+}
+
+input:focus{border-color:var(--blue);}
+
+.amount-input{
+  margin-bottom:20px;
+}
+
+.mode-toggle{
+  display:flex;
+  border:1px solid var(--grey-line);
+  margin-bottom:20px;
+}
+
+.mode-toggle button{
+  flex:1;
+  text-align:center;
+  padding:11px 8px;
+  font-size:13px;
+  font-weight:300;
+  cursor:pointer;
+  color:var(--ink);
+  background:var(--paper);
+  border:none;
+  border-left:1px solid var(--grey-line);
+  border-radius:0;
+  font-family:'IBM Plex Sans Arabic', sans-serif;
+  transition:background .12s ease, color .12s ease;
+}
+
+.mode-toggle button:last-child{border-left:none;}
+
+.mode-toggle button.active{
+  background:var(--blue);
+  color:var(--paper);
+  font-weight:500;
+}
+
+.mode-panel{display:none;}
+.mode-panel.active{display:block;}
+
+.people-list{
+  border:1px solid var(--grey-line);
+  margin-bottom:12px;
+}
+
+.person-row{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:10px 12px;
+  border-bottom:1px solid var(--grey-line);
+}
+
+.person-row:last-child{border-bottom:none;}
+
+.person-row input[type="text"]{
+  flex:1.4;
+  border:none;
+  border-left:1px solid var(--grey-line);
+  padding:6px 8px;
+  border-radius:0;
+}
+
+.person-row input[type="number"]{
+  flex:1;
+  border:none;
+  padding:6px 8px;
+  text-align:center;
+  border-radius:0;
+}
+
+.person-row .remove-btn{
+  flex-shrink:0;
+  width:28px;
+  height:28px;
+  border:1px solid var(--grey-line);
+  background:var(--paper);
+  color:var(--grey);
+  cursor:pointer;
+  font-size:14px;
+  line-height:1;
+  border-radius:0;
+  transition:background .12s ease, color .12s ease;
+}
+
+.person-row .remove-btn:hover{
+  background:var(--ink);
+  color:var(--paper);
+  border-color:var(--ink);
+}
+
+.add-person-btn{
+  width:100%;
+  background:var(--paper);
+  border:1px dashed var(--grey-line);
+  color:var(--grey);
+  padding:10px;
+  font-size:13px;
+  font-weight:300;
+  cursor:pointer;
+  font-family:'IBM Plex Sans Arabic', sans-serif;
+  border-radius:0;
+  margin-bottom:14px;
+  transition:border-color .12s ease, color .12s ease;
+}
+
+.add-person-btn:hover{
+  border-color:var(--blue);
+  color:var(--blue);
+}
+
+.percent-sum{
+  font-size:12px;
+  color:var(--grey);
+  margin-bottom:20px;
+  text-align:center;
+}
+
+.percent-sum.ok{color:var(--blue);}
+.percent-sum.error{color:#C0392B;}
+
+button.btn-primary{
+  border:none;
+  border-radius:0;
+  cursor:pointer;
+  font-family:'IBM Plex Sans Arabic', sans-serif;
+  font-weight:500;
+  font-size:14px;
+  letter-spacing:0.01em;
+  padding:14px 18px;
+  background:var(--blue);
+  color:var(--paper);
+  width:100%;
+  transition:opacity .12s ease;
+}
+
+button.btn-primary:hover{opacity:.88;}
+
+.results-list{
+  border:1px solid var(--grey-line);
+  margin-bottom:16px;
+}
+
+.result-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:14px 16px;
+  border-bottom:1px solid var(--grey-line);
+}
+
+.result-row:last-child{border-bottom:none;}
+
+.result-row .name{
+  font-size:14px;
+  font-weight:300;
+}
+
+.result-row .amount{
+  font-size:16px;
+  font-weight:500;
+  color:var(--ink);
+}
+
+.results-total{
+  display:flex;
+  justify-content:space-between;
+  padding:14px 16px;
+  background:var(--grey-tint);
+  margin-bottom:16px;
+  font-size:14px;
+}
+
+.results-total .amount{
+  font-weight:500;
+  color:var(--blue);
+}
+
+.empty-state{
+  color:var(--grey);
+  font-size:13px;
+  text-align:center;
+  padding:60px 10px;
+}
+
+.btn-secondary{
+  background:var(--paper);
+  color:var(--ink);
+  border:1px solid var(--ink);
+  width:100%;
+  padding:14px 18px;
+  font-family:'IBM Plex Sans Arabic', sans-serif;
+  font-weight:500;
+  font-size:14px;
+  cursor:pointer;
+  border-radius:0;
+  transition:background .12s ease, color .12s ease;
+}
+
+.btn-secondary:hover{background:var(--ink); color:var(--paper);}
+
+.btn-secondary.copied{
+  background:var(--blue);
+  border-color:var(--blue);
+  color:var(--paper);
+}
+
+footer{
+  text-align:center;
+  padding:20px;
+  font-size:12px;
+  color:var(--grey);
+  border-top:1px solid var(--grey-line);
+}
+
+footer a{
+  color:var(--grey);
+  text-decoration:none;
+  border-bottom:1px solid var(--grey-line);
+  transition:color .12s ease, border-color .12s ease;
+}
+
+footer a:hover{
+  color:var(--blue);
+  border-color:var(--blue);
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">قسّم</div>
+</div>
+
+<main>
+  <div class="intro">
+    <h1>قسّم فاتورتك بسهولة</h1>
+    <p>اكتب المبلغ، اختر بالتساوي أو بنسب مخصصة، وطلع لك نصيب كل شخص.</p>
+  </div>
+
+  <div class="grid">
+    <div class="box">
+      <div class="box-label">
+        <span class="box-num">01</span>
+        <span class="box-title">تفاصيل التقسيم</span>
+      </div>
+
+      <div class="amount-input">
+        <div class="field-label">المبلغ الإجمالي</div>
+        <input type="number" id="totalAmount" placeholder="0" min="0" step="0.01">
+      </div>
+
+      <div class="mode-toggle" id="modeToggle">
+        <button data-mode="equal" class="active">بالتساوي</button>
+        <button data-mode="custom">بنسب مخصصة</button>
+      </div>
+
+      <div class="mode-panel active" id="panelEqual">
+        <div class="field-label">عدد الأشخاص</div>
+        <input type="number" id="peopleCount" value="2" min="1" max="50">
+      </div>
+
+      <div class="mode-panel" id="panelCustom">
+        <div class="field-label">الأشخاص ونسبهم</div>
+        <div class="people-list" id="peopleList"></div>
+        <button class="add-person-btn" id="addPersonBtn">+ إضافة شخص</button>
+        <div class="percent-sum" id="percentSum"></div>
+      </div>
+
+      <button class="btn-primary" id="splitBtn">قسّم</button>
+    </div>
+
+    <div class="box">
+      <div class="box-label">
+        <span class="box-num">02</span>
+        <span class="box-title">النتيجة</span>
+      </div>
+
+      <div id="resultsWrap">
+        <div class="empty-state">عبّي التفاصيل واضغط "قسّم" عشان تشوف نصيب كل شخص هنا</div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>قسّم — <a href="https://t7.adah.binjaafar.xyz">t7.adah.binjaafar.xyz</a></footer>
+
+<script>
+let currentMode = 'equal';
+let personIdCounter = 0;
+
+const modeToggle = document.getElementById('modeToggle');
+const panelEqual = document.getElementById('panelEqual');
+const panelCustom = document.getElementById('panelCustom');
+const peopleList = document.getElementById('peopleList');
+const addPersonBtn = document.getElementById('addPersonBtn');
+const percentSum = document.getElementById('percentSum');
+const splitBtn = document.getElementById('splitBtn');
+const resultsWrap = document.getElementById('resultsWrap');
+
+modeToggle.querySelectorAll('button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    modeToggle.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentMode = btn.dataset.mode;
+    panelEqual.classList.toggle('active', currentMode === 'equal');
+    panelCustom.classList.toggle('active', currentMode === 'custom');
+  });
+});
+
+function addPersonRow(name, percent){
+  personIdCounter++;
+  const row = document.createElement('div');
+  row.className = 'person-row';
+  row.innerHTML = `
+    <input type="text" class="person-name" placeholder="اسم ${personIdCounter}" value="${name || ''}">
+    <input type="number" class="person-percent" placeholder="%" min="0" max="100" value="${percent !== undefined ? percent : ''}">
+    <button class="remove-btn" type="button">×</button>
+  `;
+  row.querySelector('.remove-btn').addEventListener('click', () => {
+    row.remove();
+    updatePercentSum();
+  });
+  row.querySelector('.person-percent').addEventListener('input', updatePercentSum);
+  peopleList.appendChild(row);
+  updatePercentSum();
+}
+
+function updatePercentSum(){
+  const rows = peopleList.querySelectorAll('.person-row');
+  let sum = 0;
+  rows.forEach(row => {
+    const val = parseFloat(row.querySelector('.person-percent').value) || 0;
+    sum += val;
+  });
+  const rounded = Math.round(sum * 100) / 100;
+  percentSum.textContent = `مجموع النسب: ${rounded}%`;
+  percentSum.className = 'percent-sum ' + (Math.abs(rounded - 100) < 0.01 ? 'ok' : 'error');
+}
+
+addPersonBtn.addEventListener('click', () => addPersonRow());
+
+// seed with two people by default
+addPersonRow('', 50);
+addPersonRow('', 50);
+
+function formatMoney(n){
+  return n.toLocaleString('ar', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+}
+
+splitBtn.addEventListener('click', () => {
+  const total = parseFloat(document.getElementById('totalAmount').value);
+  if(!total || total <= 0){
+    resultsWrap.innerHTML = '<div class="empty-state">أدخل مبلغ صحيح أولًا</div>';
+    return;
+  }
+
+  let shares = [];
+
+  if(currentMode === 'equal'){
+    let count = parseInt(document.getElementById('peopleCount').value, 10);
+    if(!count || count < 1) count = 1;
+
+    const base = Math.floor((total / count) * 100) / 100;
+    let remainder = Math.round((total - base * count) * 100) / 100;
+
+    for(let i = 1; i <= count; i++){
+      let amount = base;
+      if(remainder > 0){
+        amount = Math.round((amount + 0.01) * 100) / 100;
+        remainder = Math.round((remainder - 0.01) * 100) / 100;
+      }
+      shares.push({ name: `شخص ${i}`, amount });
+    }
+  }else{
+    const rows = peopleList.querySelectorAll('.person-row');
+    const people = [];
+    let sumPercent = 0;
+    rows.forEach((row, i) => {
+      const name = row.querySelector('.person-name').value.trim() || `شخص ${i + 1}`;
+      const percent = parseFloat(row.querySelector('.person-percent').value) || 0;
+      people.push({ name, percent });
+      sumPercent += percent;
+    });
+
+    if(Math.abs(sumPercent - 100) > 0.5){
+      resultsWrap.innerHTML = '<div class="empty-state">مجموع النسب لازم يساوي 100% — راجع القيم وحاول مرة ثانية</div>';
+      return;
+    }
+
+    let runningTotal = 0;
+    people.forEach((p, i) => {
+      let amount;
+      if(i === people.length - 1){
+        amount = Math.round((total - runningTotal) * 100) / 100;
+      }else{
+        amount = Math.round((total * (p.percent / 100)) * 100) / 100;
+        runningTotal = Math.round((runningTotal + amount) * 100) / 100;
+      }
+      shares.push({ name: p.name, amount });
+    });
+  }
+
+  let html = '<div class="results-list">';
+  shares.forEach(s => {
+    html += `<div class="result-row"><span class="name">${s.name}</span><span class="amount">${formatMoney(s.amount)}</span></div>`;
+  });
+  html += '</div>';
+
+  const totalCheck = shares.reduce((sum, s) => sum + s.amount, 0);
+  html += `<div class="results-total"><span>الإجمالي</span><span class="amount">${formatMoney(totalCheck)}</span></div>`;
+  html += '<button class="btn-secondary" id="copyResultsBtn">نسخ النتيجة</button>';
+
+  resultsWrap.innerHTML = html;
+
+  document.getElementById('copyResultsBtn').addEventListener('click', async (e) => {
+    const lines = shares.map(s => `${s.name}: ${formatMoney(s.amount)}`);
+    lines.push(`الإجمالي: ${formatMoney(totalCheck)}`);
+    const text = lines.join('\n');
+    try{
+      await navigator.clipboard.writeText(text);
+    }catch(err){
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    }
+    const btn = e.target;
+    const original = btn.textContent;
+    btn.textContent = 'تم النسخ';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = original;
+      btn.classList.remove('copied');
+    }, 1400);
+  });
+});
+</script>
+
+</body>
+</html>

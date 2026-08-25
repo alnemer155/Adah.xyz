@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>#ai</title>
+<meta name="description" content="أكواد استضافة نماذج ذكاء اصطناعي محليًا: DeepSeek، GPT-OSS، Gemma 4، Qwen، Flux، S1-mini.">
+<link rel="canonical" href="https://t3.adah.binjaafar.xyz">
+<meta property="og:type" content="website">
+<meta property="og:title" content="#ai">
+<meta property="og:description" content="أكواد استضافة نماذج ذكاء اصطناعي محليًا: DeepSeek، GPT-OSS، Gemma 4، Qwen، Flux، S1-mini.">
+<meta property="og:url" content="https://t3.adah.binjaafar.xyz">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="#ai">
+<meta name="twitter:description" content="أكواد استضافة نماذج ذكاء اصطناعي محليًا.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;500;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --paper:#FFFFFF;
+  --ink:#0B0C0E;
+  --blue:#1E4FFF;
+  --grey:#9AA0A8;
+  --grey-line:#D8DADD;
+  --grey-tint:#F4F4F5;
+}
+
+*{box-sizing:border-box; margin:0; padding:0;}
+
+html{scroll-behavior:smooth;}
+
+html,body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:'IBM Plex Sans Arabic', sans-serif;
+  font-weight:300;
+  min-height:100%;
+}
+
+.topbar{
+  padding:32px clamp(20px,5vw,56px) 24px;
+  display:flex;
+  justify-content:center;
+  background:transparent;
+}
+
+.logo{
+  font-weight:700;
+  font-size:clamp(24px, 3.4vw, 34px);
+  letter-spacing:0.01em;
+  direction:ltr;
+}
+
+main{
+  max-width:960px;
+  margin:0 auto;
+  padding:clamp(8px,5vw,24px) clamp(20px,5vw,56px) 80px;
+}
+
+.intro{
+  margin-bottom:clamp(28px,4vw,40px);
+  max-width:640px;
+  margin-left:auto;
+  margin-right:auto;
+  text-align:center;
+}
+
+.intro h1{
+  font-weight:700;
+  font-size:clamp(24px,3.8vw,34px);
+  line-height:1.3;
+  margin-bottom:10px;
+}
+
+.intro p{
+  font-weight:300;
+  font-size:15px;
+  color:var(--grey);
+  line-height:1.7;
+}
+
+/* tab nav grid - matches the reference layout */
+.nav{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  border:1px solid var(--grey-line);
+  margin-bottom:clamp(28px,4vw,40px);
+}
+
+@media (min-width:640px){
+  .nav{grid-template-columns:repeat(5, 1fr);}
+}
+
+.nav button{
+  border:none;
+  border-bottom:1px solid var(--grey-line);
+  border-left:1px solid var(--grey-line);
+  padding:14px 8px;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:'IBM Plex Sans Arabic', sans-serif;
+  font-weight:500;
+  font-size:13px;
+  cursor:pointer;
+  border-radius:0;
+  transition:background .12s ease, color .12s ease;
+}
+
+.nav button:nth-child(3n){border-left:none;}
+@media (min-width:640px){
+  .nav button:nth-child(3n){border-left:1px solid var(--grey-line);}
+  .nav button:nth-child(5n){border-left:none;}
+}
+
+.nav button:hover{background:var(--grey-tint);}
+
+.nav button.active{
+  background:var(--blue);
+  color:var(--paper);
+}
+
+/* remove bottom border from last row */
+.nav button:nth-last-child(-n+3){border-bottom:none;}
+@media (min-width:640px){
+  .nav button:nth-last-child(-n+5){border-bottom:none;}
+  .nav button:nth-last-child(-n+3){border-bottom:1px solid var(--grey-line);}
+}
+
+.panel{display:none;}
+.panel.active{display:block;}
+
+/* home overview */
+.home-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));
+  gap:16px;
+}
+
+.info-card{
+  border:1px solid var(--grey-line);
+  padding:20px;
+  cursor:pointer;
+  transition:border-color .12s ease;
+}
+
+.info-card:hover{border-color:var(--blue);}
+
+.info-card h3{
+  font-weight:700;
+  font-size:16px;
+  margin-bottom:10px;
+  direction:ltr;
+  text-align:right;
+}
+
+.badges{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-bottom:10px;
+}
+
+.badge{
+  font-size:11px;
+  font-weight:500;
+  padding:4px 8px;
+  border:1px solid var(--grey-line);
+  color:var(--ink);
+}
+
+.badge.free{color:var(--blue); border-color:var(--blue);}
+
+.info-card p{
+  font-size:13px;
+  color:var(--grey);
+  line-height:1.7;
+}
+
+/* section content (per-model panels) */
+.section{
+  border:1px solid var(--grey-line);
+  padding:clamp(20px,3vw,32px);
+}
+
+.section-label{
+  display:flex;
+  align-items:baseline;
+  gap:10px;
+  margin-bottom:6px;
+}
+
+.box-num{
+  font-weight:700;
+  font-size:13px;
+  color:var(--blue);
+}
+
+.box-title{
+  font-weight:700;
+  font-size:18px;
+  letter-spacing:0.01em;
+  direction:ltr;
+  display:inline-block;
+}
+
+.section p.desc{
+  font-weight:300;
+  font-size:14px;
+  color:var(--grey);
+  line-height:1.75;
+  margin:12px 0 20px;
+}
+
+.tag-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-bottom:20px;
+}
+
+.tag{
+  border:1px solid var(--grey-line);
+  padding:5px 10px;
+  font-size:12px;
+  font-weight:500;
+  color:var(--ink);
+  direction:ltr;
+}
+
+.code-block{
+  margin-bottom:16px;
+}
+
+.code-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:8px;
+}
+
+.code-label{
+  font-size:12px;
+  color:var(--grey);
+  font-weight:500;
+}
+
+.copy-btn{
+  background:var(--paper);
+  border:1px solid var(--ink);
+  color:var(--ink);
+  font-family:'IBM Plex Sans Arabic', sans-serif;
+  font-size:12px;
+  font-weight:500;
+  padding:7px 14px;
+  cursor:pointer;
+  border-radius:0;
+  white-space:nowrap;
+  transition:background .12s ease, color .12s ease;
+}
+
+.copy-btn:hover{
+  background:var(--ink);
+  color:var(--paper);
+}
+
+.copy-btn.copied{
+  background:var(--blue);
+  border-color:var(--blue);
+  color:var(--paper);
+}
+
+.code-box{
+  background:var(--ink);
+  color:var(--paper);
+  padding:16px 18px;
+  overflow-x:auto;
+}
+
+.code-box pre{
+  font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size:13px;
+  line-height:1.8;
+  direction:ltr;
+  text-align:left;
+  white-space:pre;
+}
+
+.note{
+  font-size:12px;
+  color:var(--grey);
+  line-height:1.7;
+  margin-top:6px;
+}
+
+.req{
+  font-size:13px;
+  color:var(--ink);
+  margin-top:4px;
+}
+
+.req strong{
+  color:var(--blue);
+  font-weight:600;
+}
+
+footer{
+  text-align:center;
+  padding:20px;
+  font-size:12px;
+  color:var(--grey);
+  border-top:1px solid var(--grey-line);
+}
+
+footer a{
+  color:var(--grey);
+  text-decoration:none;
+  border-bottom:1px solid var(--grey-line);
+  transition:color .12s ease, border-color .12s ease;
+  direction:ltr;
+  display:inline-block;
+}
+
+footer a:hover{
+  color:var(--blue);
+  border-color:var(--blue);
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">#ai</div>
+</div>
+
+<main>
+  <div class="intro">
+    <h1>استضف نماذج الذكاء الاصطناعي على جهازك</h1>
+    <p>اختر نموذج من القائمة تحت عشان تشوف كود التثبيت والتشغيل الخاص فيه، بدون إنترنت وبدون مشاركة بياناتك مع أي سيرفر خارجي.</p>
+  </div>
+
+  <div class="nav" id="nav">
+    <button data-target="home" class="active">الرئيسية</button>
+    <button data-target="prereq">قبل ما تبدأ</button>
+    <button data-target="deepseek">DeepSeek</button>
+    <button data-target="gptoss">GPT-OSS</button>
+    <button data-target="gemma4">Gemma 4</button>
+    <button data-target="qwen">Qwen</button>
+    <button data-target="flux">Flux</button>
+    <button data-target="s1mini">S1-mini</button>
+    <button data-target="api">API</button>
+  </div>
+
+  <!-- HOME -->
+  <div class="panel active" id="panel-home">
+    <div class="home-grid">
+
+      <div class="info-card" data-target="deepseek">
+        <h3>DeepSeek R1</h3>
+        <div class="badges">
+          <span class="badge free">مجاني — MIT</span>
+          <span class="badge">نص فقط</span>
+          <span class="badge">استدلال</span>
+        </div>
+        <p>نموذج استدلال يفكّر خطوة بخطوة قبل الإجابة. أحجام من 1.5B إلى 671B.</p>
+      </div>
+
+      <div class="info-card" data-target="gptoss">
+        <h3>GPT-OSS</h3>
+        <div class="badges">
+          <span class="badge free">مجاني — Apache 2.0</span>
+          <span class="badge">نص فقط</span>
+          <span class="badge">أدوات</span>
+        </div>
+        <p>نماذج OpenAI مفتوحة الوزن، بحجمين 20B و120B، تدعم استدعاء الأدوات.</p>
+      </div>
+
+      <div class="info-card" data-target="gemma4">
+        <h3>Gemma 4</h3>
+        <div class="badges">
+          <span class="badge free">مجاني — Apache 2.0</span>
+          <span class="badge">نص + صورة</span>
+        </div>
+        <p>أحدث نماذج جوجل مفتوحة المصدر، متعددة الوسائط، من e2b إلى 31B.</p>
+      </div>
+
+      <div class="info-card" data-target="qwen">
+        <h3>Qwen 3</h3>
+        <div class="badges">
+          <span class="badge free">مجاني — Apache 2.0</span>
+          <span class="badge">نص فقط</span>
+          <span class="badge">استدلال قابل للتبديل</span>
+        </div>
+        <p>عائلة Alibaba مفتوحة المصدر، من 0.6B إلى 235B، بوضع تفكير يمكن تشغيله أو إيقافه.</p>
+      </div>
+
+      <div class="info-card" data-target="flux">
+        <h3>Flux</h3>
+        <div class="badges">
+          <span class="badge">Schnell مجاني — Apache 2.0</span>
+          <span class="badge">توليد صور</span>
+        </div>
+        <p>نموذج توليد صور من نص من Black Forest Labs. يحتاج كرت شاشة قوي نسبيًا.</p>
+      </div>
+
+      <div class="info-card" data-target="s1mini">
+        <h3>S1-mini</h3>
+        <div class="badges">
+          <span class="badge free">مجاني — Apache 2.0</span>
+          <span class="badge">تنظيف نص صوتي</span>
+        </div>
+        <p>من Superwhisper. نموذج صغير (0.6B) ينظّف تفريغ الصوت الخام ويحوّله لنص مقروء.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PREREQ -->
+  <div class="panel" id="panel-prereq">
+    <div class="section">
+      <div class="section-label">
+        <span class="box-num">00</span>
+        <span class="box-title">قبل ما تبدأ</span>
+      </div>
+      <p class="desc">ثبّت Ollama أولًا — هو البرنامج اللي يشغّل معظم النماذج على جهازك ويديرها.</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-label">macOS / Linux</span>
+          <button class="copy-btn" data-code="curl -fsSL https://ollama.com/install.sh | sh">نسخ الكود</button>
+        </div>
+        <div class="code-box">
+          <pre>curl -fsSL https://ollama.com/install.sh | sh</pre>
+        </div>
+      </div>
+      <div class="note">لويندوز، نزّل المثبّت مباشرة من ollama.com. بعد التثبيت، أي أمر "ollama run" ينزّل النموذج تلقائيًا أول مرة.</div>
+    </div>
+  </div>
+
+  <!-- DEEPSEEK -->
+  <div class="panel" id="panel-deepseek">
+    <div class="section">
+      <div class="section-label">
+        <span class="box-num">01</span>
+        <span class="box-title">DeepSeek R1</span>
+      </div>
+      <p class="desc">نموذج استدلال مفتوح المصدر من DeepSeek، يفكّر خطوة بخطوة قبل ما يجاوب. متوفر بأحجام من 1.5B إلى 671B، فيه نسخة تناسب أي جهاز. مجاني بالكامل (رخصة MIT)، نص فقط.</p>
+
+      <div class="tag-row">
+        <span class="tag">1.5b</span>
+        <span class="tag">7b</span>
+        <span class="tag">8b</span>
+        <span class="tag">14b</span>
+        <span class="tag">32b</span>
+        <span class="tag">70b</span>
+        <span class="tag">671b</span>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-label">تحميل وتشغيل (مثال بحجم 8B)</span>
+          <button class="copy-btn" data-code="ollama pull deepseek-r1:8b
+ollama run deepseek-r1:8b">نسخ الكود</button>
+        </div>
+        <div class="code-box">
+          <pre>ollama pull deepseek-r1:8b
+ollama run deepseek-r1:8b</pre>
+        </div>
+      </div>
+
+      <div class="req">الحد الأدنى المقترح: <strong>8 جيجا رام</strong> للحجم 8B، وكل ما كبر الحجم احتاج رام وذاكرة GPU أكثر.</div>
+    </div>
+  </div>
+
+  <!-- GPT-OSS -->
+  <div class="panel" id="panel-gptoss">
+    <div class="section">
+      <div class="section-label">
+        <span class="box-num">02</span>
+        <span class="box-title">GPT-OSS</span>
+      </div>
+      <p class="desc">نماذج OpenAI مفتوحة الوزن (رخصة Apache 2.0)، بإصدارين: 20B للاستخدام المحلي السريع، و120B للمهام الأثقل. تدعم استدعاء الأدوات والاستدلال المتدرّج. نص فقط، ومجانية بالكامل.</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-label">GPT-OSS 20B</span>
+          <button class="copy-btn" data-code="ollama pull gpt-oss:20b
+ollama run gpt-oss:20b">نسخ الكود</button>
+        </div>
+        <div class="code-box">
+          <pre>ollama pull gpt-oss:20b
+ollama run gpt-oss:20b</pre>
+        </div>
+        <div class="note">يحتاج تقريبًا 16 جيجا رام.</div>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-label">GPT-OSS 120B</span>
+          <button class="copy-btn" data-code="ollama pull gpt-oss:120b
+ollama run gpt-oss:120b">نسخ الكود</button>
+        </div>
+        <div class="code-box">
+          <pre>ollama pull gpt-oss:120b
+ollama run gpt-oss:120b</pre>
+        </div>
+        <div class="note">يحتاج تقريبًا 80 جيجا (GPU من فئة H100 أو ما يعادله).</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GEMMA 4 -->
+  <div class="panel" id="panel-gemma4">
+    <div class="section">
+      <div class="section-label">
+        <span class="box-num">03</span>
+        <span class="box-title">Gemma 4</span>
+      </div>
+      <p class="desc">أحدث عائلة نماذج جوجل مفتوحة المصدر، برخصة Apache 2.0 بدون قيود استخدام. متعددة الوسائط (نص وصورة)، وتدعم حتى 256K من نافذة السياق بالأحجام الكبيرة. مجانية بالكامل.</p>
+
+      <div class="tag-row">
+        <span class="tag">e2b</span>
+        <span class="tag">e4b</span>
+        <span class="tag">12b</span>
+        <span class="tag">26b (MoE)</span>
+        <span class="tag">31b</span>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-label">تشغيل بالحجم الافتراضي (e4b)</span>
+          <button class="copy-btn" data-code="ollama pull gemma4
+ollama run gemma4">نسخ الكود</button>
+        </div>
+        <div class="code-box">
+          <pre>ollama pull gemma4
+ollama run gemma4</pre>
+        </div>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-label">اختيار حجم معيّن</span>
+          <button class="copy-btn" data-code="ollama run gemma4:e2b
+ollama run gemma4:12b
+ollama run gemma4:26b
+ollama run gemma4:31b">نسخ الكود</button>
+        </div>
+        <div class="code-box">
+          <pre>ollama run gemma4:e2b
+ollama run gemma4:12b
+ollama run gemma4:26b
+ollama run gemma4:31b</pre>
+        </div>
+      </div>
+
+      <div class="req">e2b و e4b يشتغلون على لابتوب عادي (~7–10 جيجا رام)، بينما 26b و31b يحتاجون GPU بذاكرة 16–24 جيجا.</div>
+    </div>
+  </div>
+
+  <!-- QWEN -->
+  <div class="panel" id="panel-qwen">
+    <div class="section">
+      <div class="section-label">
+        <span class="box-num">04</span>
+        <span class="box-title">Qwen 3</span>
+      </div>
+      <p class="desc">عائلة نماذج Alibaba مفتوحة المصدر (Apache 2.0)، نص فقط، تدعم 119 لغة، وفيها وضع تفكير (Thinking) تقدر تشغّله أو توقفه حسب الحاجة للسرعة أو الدقة.</p>
+
+      <div class="tag-row">
+        <span class="tag">0.6b</span>
+        <span class="tag">4b</span>
+        <span class="tag">8b</span>
+        <span class="tag">14b</span>
+        <span class="tag">32b</span>
+        <span class="tag">30b-a3b (MoE)</span>
+        <span class="tag">235b-a22b (MoE)</span>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-label">تشغيل الحجم الافتراضي (8B)</span>
+          <button class="copy-btn" data-code="ollama pull qwen3
+ollama run qwen3">نسخ الكود</button>
+        </div>
+        <div class="code-box">
+          <pre>ollama pull qwen3
+ollama run qwen3</pre>
+        </div>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-label">التحكم بوضع التفكير</span>
+          <button class="copy-btn" data-code="ollama run qwen3 --think
+ollama run qwen3 --no-think">نسخ الكود</button>
+        </div>
+        <div class="code-box">
+          <pre>ollama run qwen3 --think
+ollama run qwen3 --no-think</pre>
+        </div>
+      </div>
+
+      <div class="req">8B يحتاج تقريبًا <strong>6 جيجا</strong> ذاكرة GPU، و30B-a3b (MoE) يقارب سرعة 8B بجودة أعلى إذا كان عندك 20 جيجا رام/VRAM.</div>
+    </div>
+  </div>
+
+  <!-- FLUX -->
+  <div class="panel" id="panel-flux">
+    <div class="section">
+      <div class="section-label">
+        <span class="box-num">05</span>
+        <span class="box-title">Flux</span>
+      </div>
+      <p class="desc">نموذج توليد صور من نص من Black Forest Labs. نسخة Schnell مجانية بالكامل (Apache 2.0) وأسرع، ونسخة Dev أعلى جودة لكن للاستخدام غير التجاري فقط. ما يشتغل عبر Ollama — تحتاج Python وحزمة diffusers، أو واجهة ComfyUI.</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-label">التثبيت</span>
+          <button class="copy-btn" data-code="pip install diffusers torch accelerate">نسخ الكود</button>
+        </div>
+        <div class="code-box">
+          <pre>pip install diffusers torch accelerate</pre>
+        </div>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-label">توليد صورة (FLUX.1-schnell)</span>
+          <button class="copy-btn" data-code='from diffusers import FluxPipeline
+import torch
+
+pipe = FluxPipeline.from_pretrained(
+    "black-forest-labs/FLUX.1-schnell",
+    torch_dtype=torch.bfloat16
+)
+pipe.enable_model_cpu_offload()
+
+image = pipe("وصف الصورة هنا", num_inference_steps=4).images[0]
+image.save("output.png")'>نسخ الكود</button>
+        </div>
+        <div class="code-box">
+          <pre>from diffusers import FluxPipeline
+import torch
+
+pipe = FluxPipeline.from_pretrained(
+    "black-forest-labs/FLUX.1-schnell",
+    torch_dtype=torch.bfloat16
+)
+pipe.enable_model_cpu_offload()
+
+image = pipe("وصف الصورة هنا", num_inference_steps=4).images[0]
+image.save("output.png")</pre>
+        </div>
+      </div>
+
+      <div class="req">يحتاج GPU بذاكرة <strong>12 جيجا فأكثر</strong> للأداء المريح. لأجهزة أضعف، استخدم نسخ GGUF مضغوطة عبر ComfyUI بدل diffusers.</div>
+    </div>
+  </div>
+
+  <!-- S1-MINI -->
+  <div class="panel" id="panel-s1mini">
+    <div class="section">
+      <div class="section-label">
+        <span class="box-num">06</span>
+        <span class="box-title">S1-mini</span>
+      </div>
+      <p class="desc">من Superwhisper. نموذج صغير جدًا (0.6B، مبني على Qwen3-0.6B) ما يفرّغ الصوت بنفسه، بل ينظّف نص مفرّغ خام من الحشو والتكرار ويرتب علامات الترقيم — يجي بعد أي نموذج تفريغ صوت مثل Whisper. مجاني (Apache 2.0)، إنجليزي فقط بالإصدار الحالي.</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-label">تشغيل عبر vLLM</span>
+          <button class="copy-btn" data-code="pip install vllm
+vllm serve superwhisper/s1-mini">نسخ الكود</button>
+        </div>
+        <div class="code-box">
+          <pre>pip install vllm
+vllm serve superwhisper/s1-mini</pre>
+        </div>
+      </div>
+
+      <div class="note">فيه نسخة GGUF مضغوطة (~462MB) تشتغل على أي جهاز حتى بدون GPU، عبر llama.cpp أو أي واجهة تدعم GGUF.</div>
+    </div>
+  </div>
+
+  <!-- API -->
+  <div class="panel" id="panel-api">
+    <div class="section">
+      <div class="section-label">
+        <span class="box-num">07</span>
+        <span class="box-title">استدعاء أي نموذج عبر API</span>
+      </div>
+      <p class="desc">بعد ما يشتغل Ollama، أي نموذج نزّلته يصير متاح محليًا على منفذ 11434 — تقدر تستخدمه من أي تطبيق أو سكربت بدل الأمر التفاعلي.</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-label">مثال cURL</span>
+          <button class="copy-btn" data-code='curl http://localhost:11434/api/chat -d "{
+  \"model\": \"gemma4\",
+  \"messages\": [{ \"role\": \"user\", \"content\": \"مرحبا\" }]
+}"'>نسخ الكود</button>
+        </div>
+        <div class="code-box">
+          <pre>curl http://localhost:11434/api/chat -d '{
+  "model": "gemma4",
+  "messages": [{ "role": "user", "content": "مرحبا" }]
+}'</pre>
+        </div>
+      </div>
+      <div class="note">بدّل قيمة "model" باسم أي نموذج ثبّته (مثل deepseek-r1:8b أو gpt-oss:20b أو qwen3).</div>
+    </div>
+  </div>
+
+</main>
+
+<footer>#ai — <a href="https://t3.adah.binjaafar.xyz">t3.adah.binjaafar.xyz</a></footer>
+
+<script>
+const navButtons = document.querySelectorAll('#nav button');
+const panels = document.querySelectorAll('.panel');
+
+function showPanel(target){
+  panels.forEach(p => p.classList.toggle('active', p.id === 'panel-' + target));
+  navButtons.forEach(b => b.classList.toggle('active', b.dataset.target === target));
+  window.scrollTo({top: document.querySelector('.nav').offsetTop - 20, behavior:'smooth'});
+}
+
+navButtons.forEach(btn => {
+  btn.addEventListener('click', () => showPanel(btn.dataset.target));
+});
+
+document.querySelectorAll('.info-card').forEach(card => {
+  card.addEventListener('click', () => showPanel(card.dataset.target));
+});
+
+document.querySelectorAll('.copy-btn').forEach(btn => {
+  btn.addEventListener('click', async (e) => {
+    e.stopPropagation();
+    const code = btn.getAttribute('data-code');
+    try{
+      await navigator.clipboard.writeText(code);
+    }catch(err){
+      const ta = document.createElement('textarea');
+      ta.value = code;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    }
+    const original = btn.textContent;
+    btn.textContent = 'تم النسخ';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = original;
+      btn.classList.remove('copied');
+    }, 1200);
+  });
+});
+</script>
+
+</body>
+</html>
